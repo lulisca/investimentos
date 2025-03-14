@@ -33,26 +33,45 @@ resultado =inverter(palavra)
 print(resultado)
 print("_"*60)
 
+import sys
 
-def poupanca(montante=0, meses=0, investido=0, marco100k=None):
-    rendimento = 0.0005
-    while montante < 1000000:
-        montante = montante * (1 + rendimento) + 500  
-        investido += 500  
 
-        if marco100k is None and montante >= 100000:
-            marco100k = (meses + 1, montante, investido)
+sys.setrecursionlimit(10**6) 
+def poupanca(montante=500/5.81, meses=0, investido=500/5.81, marco100k=None, taxa_cambio=5.81):
+  
+    rendimento = 0.015  
+    deposito_mensal = 500 / taxa_cambio  
 
-        meses += 1
-        if montante >= 1000000:
-            anos = meses // 12  
-            meses_finais = meses % 12  
-            print(f"Tempo total: {anos} anos e {meses_finais} meses")
-            print(f"Total investido: R$ {investido:.2f}")
-            print(f"Juros ao atingir R$ 100.000,00: R$ {marco100k[1] - marco100k[2]:.2f}")
-            print(f"Juros ao atingir R$ 1.000.000,00: R$ {montante - investido:.2f}")
-            break  
+    montante = montante * (1 + rendimento) + deposito_mensal
+    investido += deposito_mensal
+    meses += 1
+
+    if marco100k is None and montante >= 100000:
+        marco100k = (meses, montante, investido)
+
+    
+    if montante >= 1000000:
+        anos = meses // 12  
+        meses_finais = meses % 12  
+        print(f"Tempo total: {anos} anos e {meses_finais} meses")
+        print(f"Total investido: $ {investido:.2f}")
+        print(f"Juros ao atingir $100.000: $ {marco100k[1] - marco100k[2]:.2f}")
+        print(f"Juros ao atingir $1.000.000: $ {montante - investido:.2f}")
+        return  
+
+   
+    poupanca(montante, meses, investido, marco100k, taxa_cambio)
+
 poupanca()
+
+
+
+
+
+
+
+
+
 
 print("_"*60)
 
@@ -78,7 +97,7 @@ def investir_bitcoin():
         btc += INVESTIMENTO_MENSAL / cotacao 
         
         valor = btc * cotacao
-        meses += 1  # Incrementa o mês
+        meses += 1  
         if valor >= 100000 and marcos["100k"] is None:
             marcos["100k"] = {
                 "anos": meses // 12,
